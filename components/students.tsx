@@ -44,8 +44,15 @@ export default function Students() {
   };
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.code === ENTER_CODE) {
-      let randomHouse = houseSelector();
-      housesMap[randomHouse].update([...housesMap[randomHouse].list, student]);
+      let chosenHouse = houseSelector();
+      housesMap[chosenHouse].update([...housesMap[chosenHouse].list, student]);
+      let audio = new Audio(`/audios/${student}.mp3`);
+      audio.addEventListener("ended", (ev) => {
+        let houseAudio = new Audio(`/audios/${chosenHouse.toLowerCase()}.mp3`);
+        houseAudio.play();
+      });
+      audio.play();
+
       setStudent("");
     }
   };
