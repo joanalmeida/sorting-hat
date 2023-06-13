@@ -2,14 +2,13 @@
 
 import houseSelector from "@/lib/houseSelector";
 import Image from "next/image";
-import { KeyboardEvent, useState } from "react";
+import {  useState } from "react";
 
 import griffindorLogo from "../public/gryffindor.png";
 import ravenclawLogo from "../public/ravenclaw.png";
 import hufflepuffLogo from "../public/hufflepuff.png";
 import slytherinLogo from "../public/slytherin.png";
 
-const ENTER_CODE = "Enter";
 
 export default function Students() {
   // Houses state
@@ -37,44 +36,48 @@ export default function Students() {
     },
   };
 
-  // Student controlled input
-  const [student, setStudent] = useState<string>("");
-  const handleStudentInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setStudent(e.target.value);
-  };
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.code === ENTER_CODE) {
-      let chosenHouse = houseSelector();
-      housesMap[chosenHouse].update([...housesMap[chosenHouse].list, student]);
-      let audio = new Audio(`/audios/${student}.mp3`);
+  const studentsMap:Array<string> = ['chucho','Coqui']
+  
+  const handleStudentInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const student = e.target.value
+    let chosenHouse = houseSelector();
+    let audio = new Audio(`/audios/${student.toLowerCase()}.mp3`);
       audio.addEventListener("ended", (ev) => {
         let houseAudio = new Audio(`/audios/${chosenHouse.toLowerCase()}.mp3`);
+        houseAudio.addEventListener('ended', () => {
+          housesMap[chosenHouse].update([...housesMap[chosenHouse].list, student]);
+        })
         houseAudio.play();
       });
       audio.play();
-
-      setStudent("");
-    }
+    
+    
   };
-
   const toListItem = (student: string) => {
+    if(student === '' || student === 'Choose...')return
     return (
-      <li className="text-center p-1">
+      <li key={student} className="text-center p-1">
         <span className="font-mono">{student}</span>
       </li>
     );
   };
+  
 
   return (
     <section className="p-4 flex flex-col items-center">
-      <input
-        type="text"
+      <select      
         name="student"
+        placeholder="Choose..."
         className="border border-slate-300 bg-transparent rounded px-2 py-1 outline-none my-12 focus:within:border-slate-100"
-        value={student}
         onChange={handleStudentInputChange}
-        onKeyDown={handleKeyDown}
-      />
+      >
+        <option  selected disabled className="text-slate-500" value='Choose...'>Choose...</option>
+        { studentsMap.map( (student, index) => {
+          
+         return  <option className="text-slate-500" key={`${student}${index}`} value={student}>{student}</option>
+         
+        })}
+      </select>
       <div className="container flex">
         <div>
           <Image
