@@ -52,21 +52,6 @@ export default function Students() {
     },
   };
 
-  // const studentsMap: Array<string> = [
-  //   "agos",
-  //   "belcha",
-  //   "chucho",
-  //   "coqui",
-  //   "dardo",
-  //   "juli",
-  //   "kami",
-  //   "manu",
-  //   "marta",
-  //   "nacho",
-  //   "nati",
-  //   "santoro",
-  // ];
-
   const handleStudentInputChange = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
@@ -90,7 +75,7 @@ export default function Students() {
     if (student === "" || student === "Choose...") return;
     return (
       <li key={student} className="text-center p-1">
-        <span className="font-mono">{student}</span>
+        <span className="font-mono">{student.toUpperCase()}</span>
       </li>
     );
   };
